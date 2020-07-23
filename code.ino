@@ -37,13 +37,13 @@ void setup() {
 	unsigned long startTime = millis();
 	analogWrite(motor, motorSpeed);
 	
-	do {	
-		if(digitalRead(photogate) == 1 && rotationSpeed == 0)
-		{
-			unsigned long stopMillis = millis();
-			rotationSpeed = stopMillis - startTime;
-		}
-	} while(digitalRead(photogate) == 0 && rotationSpeed == 0)
+  do {	
+    if(digitalRead(photogate) == 1 && rotationSpeed == 0)
+    {
+      unsigned long stopMillis = millis();
+      rotationSpeed = stopMillis - startTime;
+     }   
+  } while(digitalRead(photogate) == 0 && rotationSpeed == 0);
 	
 	analogWrite(motor, 0);
 
@@ -59,9 +59,26 @@ void setup() {
 
 void loop() {
 	
+	int numRead = floor(rotationSpeed/10);
+
 	analogWrite(motor, motorSpeed);
 	for(int i = 0; i< 12; i++)
 	{
-		pixels.setPixelColor(i, pixels.Color(63,63,63));
+    int sum = 0; 
+    int average = 0;
+    int color = 0;
+    
+		for(int j = 0; j < numRead; j++)
+		{
+		  sum = sum + analogRead('a'+antenna);
+		  delay(10);
+		}
+
+    average = floor(sum/numRead);
+
+    color = map(average, 0, 1023, 0, 255);
+    
+		pixels.setPixelColor(i, pixels.Color(color, color, color));
+    pixels.show();
 	}
 }
