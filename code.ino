@@ -21,7 +21,9 @@ unsigned long rotationSpeed = 0;
 
 int delta = 20;
 
-float readings[12];
+float readings[NUMPIXELS];
+
+int numRead;
 
 //motor control for the mosfet, 2-4 volts, avg. 3 volts (102-204, avg. 153)
 int motorSpeed = 153;
@@ -55,14 +57,16 @@ void setup() {
 	}
 	delay(500);
 	pixels.clear();
+	
+	
+	numRead = floor(rotationSpeed/10);
+	analogWrite(motor, motorSpeed);
+	
 }
 
 void loop() {
 	
-	int numRead = floor(rotationSpeed/10);
-
-	analogWrite(motor, motorSpeed);
-	for(int i = 0; i< 12; i++)
+	for(int i = 0; i< NUMPIXELS; i++)
 	{
     int sum = 0; 
     int average = 0;
@@ -78,7 +82,7 @@ void loop() {
 
     color = map(average, 0, 1023, 0, 255);
     
-		pixels.setPixelColor(i, pixels.Color(color, color, color));
+	pixels.setPixelColor(i, pixels.Color(color, color, color));
     pixels.show();
 	}
 }
